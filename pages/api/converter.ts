@@ -3,7 +3,10 @@ import { exec } from "child_process";
 import { randomUUID } from "crypto";
 import extract from "extract-zip";
 import formidable from "formidable";
-import { createReadStream, readdirSync, renameSync } from "fs";
+import {
+  createReadStream,
+  readdirSync, renameSync
+} from "fs";
 import { stat } from "fs/promises";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -76,10 +79,10 @@ async function executeConvertor(filePath: string) {
     throw Error("Not supported type.");
   }
 
-  await execute(`sh exec/convert.sh ${filePath}`);
+  await execute(`sh exec/convert.sh "${filePath}"`);
   const convertedFile =
     path.basename(filePath).split(".").slice(0, -1).join(".") + ".glb";
-  await execute(`mv ${convertedFile} /tmp`);
+  await execute(`mv "${convertedFile}" /tmp`);
   return `/tmp/${convertedFile}`;
 }
 
