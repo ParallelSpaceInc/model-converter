@@ -21,6 +21,7 @@ const ConvertingPage : NextPage = () => {
           link.download = "res.glb";
           link.click();
           link.remove();
+          URL.revokeObjectURL(url);
         })
       }} >send file</button>
     
