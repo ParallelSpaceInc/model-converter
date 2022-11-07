@@ -59,17 +59,21 @@ export default async function handler(
   }
 
   if (req.method === "POST") {
-    const formidable = await getFormidableFileFromReq(req);
-    const file = makeMaybeArrayToArray<formidable.File>(
-      formidable.files.file
-    )[0];
-    const uuid = randomUUID();
-    const zipRes = await extractZip(uuid, file);
-    const fileToConv = findModelFile(zipRes.newDirPath);
-    const pathToConv = path.join("/tmp", uuid, fileToConv);
-    const convedFile = await executeConvertor(pathToConv);
-    const stream = createReadStream(convedFile);
-    stream.pipe(res);
+    try{
+      const formidable = await getFormidableFileFromReq(req);
+      const file = makeMaybeArrayToArray<formidable.File>(
+        formidable.files.file
+      )[0];
+      const uuid = randomUUID();
+      const zipRes = await extractZip(uuid, file);
+      const fileToConv = findModelFile(zipRes.newDirPath);
+      const pathToConv = path.join("/tmp", uuid, fileToConv);
+      const convedFile = await executeConvertor(pathToConv);
+      const stream = createReadStream(convedFile);
+      stream.pipe(res);
+    } catch {
+      res.status(500).end("error while converting.");
+    }
     return;
   }
 }
